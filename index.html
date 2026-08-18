@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyAgain - Aviation Marketplace</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #FF6F00;
+            --primary-dark: #E66000;
+            --secondary: #DE1B09;
+            --bg-light: #FFFFFF;
+            --text-dark: #000000;
+            --text-muted: #333333;
+            --border: rgba(0, 0, 0, 0.15);
+            --white: #FFFFFF;
+            --success: #28A745;
+            --success-dark: #218838;
+            --warning: #FFC107;
+            --danger: #DC3545;
+            --radius: 8px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { 
+            background: #FFFFFF; 
+            color: var(--text-dark); 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; outline: none; border-radius: var(--radius); transition: background 0.2s; }
+
+        /* HEADER & NAVBAR */
+        header { background: #FFFFFF; border-bottom: 2px solid var(--secondary); position: sticky; top: 0; z-index: 1000; color: #000000; }
+        .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; max-width: 1400px; margin: 0 auto; gap: 20px; background: #FFFFFF; }
+        .logo-container { display: flex; flex-direction: column; align-items: center; cursor: pointer; text-decoration: none; }
+        .logo-img { height: 40px; width: auto; object-fit: contain; }
+        .logo-subtext { font-size: 11px; font-weight: 700; color: var(--primary); letter-spacing: 0.5px; margin-top: 2px; }
+        
+        .search-container { flex: 1; max-width: 600px; position: relative; }
+        .search-bar { display: flex; align-items: center; background: #FFFFFF; border-radius: 20px; padding: 8px 16px; border: 1px solid var(--border); }
+        .search-bar:focus-within { border-color: var(--primary); background: var(--white); }
+        .search-bar input { border: none; background: transparent; width: 100%; margin-left: 10px; font-size: 14px; outline: none; color: #000000; }
+        .search-suggestions { position: absolute; top: 110%; left: 0; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); display: none; z-index: 100; max-height: 300px; overflow-y: auto; color: #000000; }
+
+        .nav-actions { display: flex; align-items: center; gap: 16px; }
+        .nav-btn { background: none; font-size: 14px; font-weight: 600; color: #000000; padding: 8px 12px; display: flex; align-items: center; gap: 6px; }
+        .nav-btn:hover { color: var(--primary); }
+        .btn-sell { background: var(--primary); color: var(--white); padding: 8px 18px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .btn-sell:hover { background: var(--primary-dark); color: var(--white); }
+
+        .category-bar { display: flex; gap: 20px; overflow-x: auto; padding: 10px 24px; max-width: 1400px; margin: 0 auto; border-top: 1px solid rgba(0, 0, 0, 0.15); font-size: 13px; font-weight: 500; white-space: nowrap; scrollbar-width: none; color: #000000; background: #FFFFFF; }
+        .category-bar::-webkit-scrollbar { display: none; }
+        .cat-item { cursor: pointer; color: #000000; opacity: 0.8; }
+        .cat-item:hover, .cat-item.active { color: var(--secondary); font-weight: 700; opacity: 1; }
+
+        /* LAYOUT MAIN */
+        main { flex: 1; max-width: 1400px; width: 100%; margin: 0 auto; padding: 20px 24px; }
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+
+        /* HERO BANNER */
+        .hero-banner { 
+            background: url('hero.png') center/cover no-repeat #000000; 
+            color: var(--white); 
+            border-radius: var(--radius); 
+            padding: 30px; 
+            margin-bottom: 24px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-left: 5px solid var(--secondary); 
+            box-shadow: var(--shadow); 
+        }
+        .hero-text h1 { font-size: 32px; color: var(--white); margin-bottom: 8px; }
+        .hero-text p { color: #FFFFFF; max-width: 600px; font-size: 15px; line-height: 1.5; }
+        .hero-logo { height: 60px; width: auto; object-fit: contain; margin: 0 20px; }
+
+        /* PRODUCT GRID & CARDS */
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #000000; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .product-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: relative; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; color: #000000; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+        .card-img-container { width: 100%; aspect-ratio: 3/4; position: relative; background: #E9ECEF; }
+        .card-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.85); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000000; font-size: 14px; transition: color 0.2s; }
+        .fav-btn.active { color: var(--secondary); }
+        .card-details { padding: 12px; }
+        .card-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #000000; }
+        .card-price { font-size: 16px; font-weight: 700; color: var(--secondary); margin: 4px 0; }
+        .card-meta { font-size: 12px; color: #333333; display: flex; justify-content: space-between; }
+
+        /* PRODUCT DETAILS PAGE */
+        .back-nav-btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #FFFFFF; background: #000000; border: 1px solid var(--border); padding: 8px 16px; border-radius: var(--radius); cursor: pointer; margin-bottom: 20px; font-size: 14px; }
+        .back-nav-btn:hover { background: #222222; }
+        
+        .product-page-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; background: var(--white); padding: 24px; border-radius: var(--radius); color: #000000; border: 1px solid var(--border); }
+        .gallery-main { width: 100%; aspect-ratio: 3/4; background: #E9ECEF; border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+        .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-thumbs { display: flex; gap: 10px; }
+        .thumb { width: 60px; height: 60px; border-radius: 4px; overflow: hidden; cursor: pointer; border: 2px solid transparent; }
+        .thumb.active { border-color: var(--primary); }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .p-details h2 { font-size: 24px; margin-bottom: 8px; color: #000000; }
+        .p-price { font-size: 28px; font-weight: 800; color: var(--secondary); margin-bottom: 16px; }
+        .p-badge { display: inline-block; background: #000000; color: var(--white); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+
+        .btn-group { display: flex; gap: 12px; margin-top: 20px; }
+        .btn-buy { flex: 2; background: var(--secondary); color: var(--white); font-size: 16px; font-weight: 700; padding: 14px; border-radius: var(--radius); }
+        .btn-buy:hover { background: #B51202; }
+        .btn-chat { flex: 1; background: #000000; border: 2px solid #000000; color: var(--white); font-size: 16px; font-weight: 700; padding: 14px; border-radius: var(--radius); }
+        .btn-chat:hover { background: #222222; }
+
+        /* CHECKOUT & WALLET */
+        .checkout-box, .wallet-box { background: var(--white); border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; color: #000000; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
+        .summary-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; border-top: 2px solid var(--border); padding-top: 12px; margin-top: 12px; }
+
+        .wallet-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .w-card { background: #F8F9FA; padding: 16px; border-radius: var(--radius); border-left: 4px solid var(--primary); }
+        .w-card.pending { border-left-color: var(--warning); }
+        .w-amount { font-size: 22px; font-weight: 800; margin-top: 8px; }
+
+        /* ADD ITEM FORM */
+        .form-container { background: var(--white); padding: 24px; border-radius: var(--radius); border: 1px solid var(--border); max-width: 700px; margin: 0 auto; color: #000000; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #000000; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; color: #000000; background: #FFFFFF; }
+        .photo-uploader { border: 2px dashed #000000; border-radius: var(--radius); padding: 20px; text-align: center; cursor: pointer; background: #FAFDFB; color: #000000; }
+
+        /* ADMIN PANEL */
+        .admin-layout { display: grid; grid-template-columns: 220px 1fr; gap: 24px; }
+        .admin-sidebar { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 12px; }
+        .admin-menu-item { padding: 10px 14px; border-radius: var(--radius); font-size: 14px; font-weight: 600; color: #333333; cursor: pointer; margin-bottom: 4px; }
+        .admin-menu-item:hover, .admin-menu-item.active { background: #000000; color: var(--white); }
+        .admin-table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); color: #000000; }
+        .admin-table th, .admin-table td { padding: 12px 16px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+        .admin-table th { background: #F8F9FA; font-weight: 700; }
+
+        /* CHAT SYSTEM */
+        .chat-container { display: grid; grid-template-columns: 280px 1fr; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); height: 550px; overflow: hidden; color: #000000; }
+        .chat-list { border-right: 1px solid var(--border); overflow-y: auto; }
+        .chat-item { padding: 12px; border-bottom: 1px solid #F1F3F5; cursor: pointer; }
+        .chat-item:hover, .chat-item.active { background: #F8F9FA; }
+        .chat-main { display: flex; flex-direction: column; height: 100%; }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-bubble { max-width: 70%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; }
+        .chat-bubble.me { background: #000000; color: var(--white); align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-bubble.them { background: #E9ECEF; color: #000000; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .chat-input { display: flex; padding: 12px; border-top: 1px solid var(--border); gap: 8px; }
+        .chat-input input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 20px; outline: none; color: #000000; }
+
+        /* FOOTER & MODALS */
+        footer { background: #000000; border-top: 2px solid var(--secondary); padding: 40px 24px; margin-top: 40px; font-size: 13px; color: #FFFFFF; }
+        .footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; }
+        .footer-col h4 { color: var(--white); margin-bottom: 12px; font-size: 14px; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .footer-col a { color: #DDDDDD; }
+        .footer-col a:hover { color: var(--primary); }
+
+        .modal-backdrop { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { background: var(--white); border-radius: var(--radius); padding: 24px; max-width: 450px; width: 90%; color: #000000; }
+
+        .status-pill { padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .status-PAID { background: #E3F2FD; color: #1976D2; }
+        .status-SHIPPED { background: #FFF3E0; color: #F57C00; }
+        .status-COMPLETED { background: #E8F5E9; color: #388E3C; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <div class="top-nav">
+            <a class="logo-container" onclick="switchView('discover')">
+                <img src="logo.png" alt="FlyAgain Logo" class="logo-img" onerror="this.onerror=null; this.src='logo.png';">
+                <span class="logo-subtext">FlyAgain</span>
+            </a>
+            
+            <div class="search-container">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #000000"></i>
+                    <input type="text" id="searchInput" placeholder="Search aviation gear, headsets, drones..." oninput="handleSearch(this.value)">
+                    <i class="fa-solid fa-xmark" id="clearSearch" style="cursor:pointer; display:none; color: #000000;" onclick="clearSearchInput()"></i>
+                </div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="switchView('favourites')"><i class="fa-regular fa-heart"></i> Saved</button>
+                <button class="btn-sell" onclick="switchView('add-item')"><i class="fa-solid fa-plus"></i> Sell Now</button>
+            </div>
+        </div>
+
+        <div class="category-bar" id="categoryBar">
+            <span class="cat-item active" onclick="filterByCategory('All')">All Categories</span>
+            <span class="cat-item" onclick="filterByCategory('Headsets')">Headsets</span>
+            <span class="cat-item" onclick="filterByCategory('Drones')">Drones</span>
+            <span class="cat-item" onclick="filterByCategory('Simulators')">Simulators</span>
+            <span class="cat-item" onclick="filterByCategory('Glasses')">Glasses</span>
+            <span class="cat-item" onclick="filterByCategory('Books')">Books</span>
+            <span class="cat-item" onclick="filterByCategory('Others')">Others</span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main>
+
+        <!-- VIEW 1: DISCOVER / HOMEPAGE -->
+        <section id="view-discover" class="page-view active">
+            <!-- Safe Selling Banner -->
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h1>Pre-loved & New Aviation Gear</h1>
+                    <p>Buy and sell aviation equipment safely with FlyAgain. Find the gear, tools and resources you need for your aviation journey.</p>
+                </div>
+                <img src="logo.png" alt="FlyAgain Logo" class="hero-logo" onerror="this.onerror=null; this.src='logo.png';">
+                <button class="btn-sell" style="padding: 12px 24px;" onclick="switchView('how-it-works')">How It Works →</button>
+            </div>
+
+            <!-- Main Marketplace Feed -->
+            <div class="section-title">
+                <span id="feedTitle">Discover Aviation Equipment</span>
+                <select id="sortSelect" onchange="handleSort(this.value)" style="padding:4px 8px; border-radius:4px; border:1px solid var(--border); color:#000000; background:#FFFFFF;">
+                    <option value="newest">Sort: Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+            <div class="product-grid" id="productGrid">
+                <!-- Products Injected via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW 2: PRODUCT DETAIL PAGE -->
+        <section id="view-product" class="page-view">
+            <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            
+            <div class="product-page-layout">
+                <div class="p-gallery">
+                    <div class="gallery-main" id="galleryMain">
+                        <!-- Main Image -->
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs">
+                        <!-- Thumbnails -->
+                    </div>
+                </div>
+                <div class="p-details">
+                    <span class="p-badge" id="pCondition">Used</span>
+                    <h2 id="pTitle">Product Title</h2>
+                    <div class="p-price" id="pPrice">R0</div>
+                    
+                    <p style="color: #333333; font-size: 14px; margin-bottom: 16px;" id="pDescription">Description text goes here...</p>
+                    
+                    <div style="font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+                        <div><strong>Category:</strong> <span id="pCategory">Headsets</span></div>
+                        <div><strong>Quantity Available:</strong> <span id="pQuantity">1</span></div>
+                        <div><strong>Delivery Options:</strong> <span>Courier Guy Lockers, PAXI Parcel</span></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-buy" onclick="initiateCheckout()">Buy Now</button>
+                        <button class="btn-chat" onclick="initiateChatFromProduct()"><i class="fa-regular fa-comment"></i> Inquiry</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: CHECKOUT -->
+        <section id="view-checkout" class="page-view">
+            <div class="checkout-box">
+                <h2 style="margin-bottom: 20px;">Checkout</h2>
+
+                <!-- Buyer Information Form -->
+                <div style="margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                    <h3 style="font-size: 15px; margin-bottom: 12px;">Buyer Information</h3>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="buyerFullName" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address *</label>
+                        <textarea id="buyerAddress" rows="2" required placeholder="Enter full physical address"></textarea>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input type="tel" id="buyerPhone" required placeholder="+27 82 123 4567">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address *</label>
+                            <input type="email" id="buyerEmail" required placeholder="john@example.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Selected Delivery Method</label>
+                    <select id="checkoutDelivery" onchange="recalculateCheckout()">
+                        <option value="Courier Guy Lockers" data-cost="75">Courier Guy Lockers - R75</option>
+                        <option value="PAXI Parcel" data-cost="60">PAXI Parcel Dropoff - R60</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Discount / Promo Code</label>
+                    <div style="display:flex; gap: 8px;">
+                        <input type="text" id="promoCodeInput" placeholder="Enter promo code (e.g. FLY20)">
+                        <button style="background:#000000; color:white; padding:0 16px;" onclick="applyPromoCode()">Apply</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="paymentGateway">
+                        <option value="Ozow">Instant EFT</option>
+                        <option value="Card">Visa / Mastercard</option>
+                    </select>
+                </div>
+
+                <div style="background:#F8F9FA; padding: 16px; border-radius: var(--radius); margin: 20px 0;">
+                    <div class="summary-row"><span>Item Price</span><span id="summaryItemPrice">R0</span></div>
+                    <div class="summary-row"><span>Delivery Fee</span><span id="summaryDeliveryFee">R0</span></div>
+                    <div class="summary-row" id="discountRow" style="display:none; color: var(--success);"><span>Discount</span><span id="summaryDiscount">-R0</span></div>
+                    <div class="summary-total"><span>Total Amount</span><span id="summaryTotal">R0</span></div>
+                </div>
+
+                <button class="btn-buy" style="width:100%;" onclick="processPayment()">Confirm & Pay</button>
+            </div>
+        </section>
+
+        <!-- VIEW 4: ADD / EDIT LISTING -->
+        <section id="view-add-item" class="page-view">
+            <div class="form-container">
+                <h2>Create New Aviation Listing</h2>
+                <p style="color:#333333; font-size:13px; margin-bottom:20px;">Add up to 6 high-quality photos to make your item stand out.</p>
+
+                <form id="addItemForm" onsubmit="handleCreateListing(event)">
+                    <div class="form-group">
+                        <label>Photos (Max 6)</label>
+                        <div class="photo-uploader" onclick="simulatePhotoUpload()">
+                            <i class="fa-solid fa-cloud-arrow-up" style="font-size:24px; color:#000000; margin-bottom:8px;"></i>
+                            <div>Click to upload images (Simulated)</div>
+                            <div id="photoCountLabel" style="font-size:11px; color:#333333; margin-top:4px;">0 / 6 uploaded</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Item Title</label>
+                        <input type="text" id="formTitle" required placeholder="e.g. Bose A20 Aviation Headset">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="formDescription" rows="3" required placeholder="Describe condition, technical specs, connector type, defects..."></textarea>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="formCategory">
+                                <option value="Headsets">Headsets</option>
+                                <option value="Drones">Drones</option>
+                                <option value="Simulators">Simulators</option>
+                                <option value="Glasses">Glasses</option>
+                                <option value="Books">Books</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Condition</label>
+                            <select id="formCondition">
+                                <option value="New">New</option>
+                                <option value="Used">Used</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="formQuantity" value="1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (ZAR)</label>
+                            <input type="number" id="formPrice" required placeholder="12500">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-sell" style="width:100%; padding:12px; margin-top:12px; justify-content:center;">Publish Listing</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- VIEW 5: SAVED / FAVOURITES -->
+        <section id="view-favourites" class="page-view">
+            <h2 style="color:#000000;">My Saved Gear</h2>
+            <p style="color:#333333; opacity: 0.9; font-size:14px; margin-bottom:20px;">Saved items stay in your profile across sessions.</p>
+            <div class="product-grid" id="favouritesGrid">
+                <!-- Favourites rendered here -->
+            </div>
+        </section>
+
+        <!-- VIEW 6: CHATS / MESSAGING -->
+        <section id="view-chats" class="page-view">
+            <h2 style="margin-bottom:16px; color:#000000;">Inquiries & Messages</h2>
+            <div class="chat-container">
+                <div class="chat-list" id="chatThreadList">
+                    <!-- Dynamic Threads -->
+                </div>
+                <div class="chat-main">
+                    <div class="chat-messages" id="chatMessagesArea">
+                        <div style="text-align:center; color:#333333; margin-top:40px;">Select a conversation to begin messaging</div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Type a message...">
+                        <button class="btn-sell" onclick="sendChatMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 7: ADMIN PANEL -->
+        <section id="view-admin" class="page-view">
+            <h2 style="margin-bottom:20px; color:#000000;">Platform Administration</h2>
+            <div class="admin-layout">
+                <div class="admin-sidebar">
+                    <div class="admin-menu-item active" onclick="switchAdminTab('users')"><i class="fa-solid fa-users"></i> Users</div>
+                    <div class="admin-menu-item" onclick="switchAdminTab('listings')"><i class="fa-solid fa-box"></i> Listings</div>
+                    <div class="admin-menu-item" onclick="switchAdminTab('orders')"><i class="fa-solid fa-receipt"></i> Orders</div>
+                    <div class="admin-menu-item" onclick="switchAdminTab('reports')"><i class="fa-solid fa-flag"></i> Moderation Reports</div>
+                </div>
+                <div class="admin-content" id="adminContentArea">
+                    <!-- Admin Tab Content rendered here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 8: HOW IT WORKS / FAQ -->
+        <section id="view-how-it-works" class="page-view">
+            <div style="background:white; padding:30px; border-radius:var(--radius); border:1px solid var(--border); color:#000000;">
+                <h2>Safe Aviation Marketplace Transactions</h2>
+                <hr style="margin: 16px 0; border:none; border-top:1px solid var(--border);">
+                <h3>How FlyAgain Works:</h3>
+                <ol style="margin-left: 20px; line-height: 2; margin-top: 10px;">
+                    <li><strong>Find Equipment:</strong> Browse headsets, drones, simulators, pilot glasses, and training material.</li>
+                    <li><strong>Place Order:</strong> Provide your delivery contact details and choose Courier Guy Lockers or PAXI Parcel.</li>
+                    <li><strong>Secure Delivery:</strong> Sellers ship the equipment directly to your designated locker or pickup node.</li>
+                </ol>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>About FlyAgain</h4>
+                <ul>
+                    <li><a href="#" onclick="switchView('how-it-works')">How It Works</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Buying & Selling</h4>
+                <ul>
+                    <li><a href="#">Buyer Protection</a></li>
+                    <li><a href="#">Seller Protection</a></li>
+                    <li><a href="#">Delivery Info</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#" onclick="switchView('how-it-works')">Help Centre</a></li>
+                    <li><a href="#">Safety & Security</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:30px; font-size:12px; color:#CCCCCC;">
+            &copy; 2026 FlyAgain Aviation Marketplace Engine. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JS APP LOGIC -->
+    <script>
+        /* ==================== GLOBAL APP STATE ==================== */
+        const state = {
+            currentUser: { id: "u1", name: "Captain Sarah", handle: "@pilot_sarah" },
+            previousView: 'discover',
+            products: [
+                { id: "p1", title: "Bose A20 Aviation Headset (Bluetooth)", price: 18500, category: "Headsets", condition: "Used", quantity: 1, images: ["image01.jpg", "image02.jpg"], description: "Dual twin plugs for general aviation. Bluetooth enabled, crystal clear audio." },
+                { id: "p2", title: "DJI Mavic 3 Enterprise Thermal Drone", price: 42000, category: "Drones", condition: "New", quantity: 1, images: ["image02.jpg"], description: "Unopened commercial drone with thermal payload and fly-more combo." },
+                { id: "p3", title: "Logitech G Saitek Pro Flight Yoke & Throttle", price: 4500, category: "Simulators", condition: "Used", quantity: 1, images: ["image03.jpg"], description: "Includes desk clamps and extra throttle quadrant. Ideal for PPL simulator training." },
+                { id: "p4", title: "Randolph Engineering Aviator Sunglasses 55mm", price: 3200, category: "Glasses", condition: "New", quantity: 2, images: ["image04.jpg"], description: "Matte chrome frame, AGX non-polarized lenses preferred by pilots." },
+                { id: "p5", title: "PPL Training Manual Set (SACAA Approved)", price: 1800, category: "Books", condition: "Used", quantity: 1, images: ["image05.jpg"], description: "Full set covering Navigation, Meteorology, Air Law, and Flight Planning." }
+            ],
+            favourites: ["p1"],
+            orders: [
+                { id: "ORD-9921", productId: "p3", title: "Logitech G Saitek Pro Flight Yoke", price: 4500, deliveryFee: 75, total: 4575, status: "SHIPPED", courier: "Courier Guy Lockers", tracking: "CG-882391" }
+            ],
+            chats: [
+                { id: "c1", peerName: "Aviation Equipment Support", productId: "p1", messages: [{ sender: "them", text: "Hello! Feel free to ask any technical questions about the Bose A20." }, { sender: "me", text: "Is the battery compartment clean?" }] }
+            ],
+            reports: [
+                { id: "r1", target: "Product: DJI Mavic Drone", reason: "Incorrect category", status: "PENDING" }
+            ],
+            activeProduct: null,
+            uploadedPhotoCount: 0,
+            activeChatIndex: 0
+        };
+
+        /* ==================== ROUTING / NAVIGATION ==================== */
+        function switchView(viewId) {
+            const currentActive = document.querySelector('.page-view.active');
+            if (currentActive && currentActive.id !== `view-${viewId}`) {
+                state.previousView = currentActive.id.replace('view-', '');
+            }
+
+            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.add('active');
+            window.scrollTo(0, 0);
+
+            if (viewId === 'discover') renderMarketplaceFeed(state.products);
+            if (viewId === 'favourites') renderFavourites();
+            if (viewId === 'chats') renderChats();
+            if (viewId === 'admin') renderAdmin();
+        }
+
+        function navigateBack() {
+            if (state.previousView) {
+                switchView(state.previousView);
+            } else {
+                switchView('discover');
+            }
+        }
+
+        /* ==================== SEARCH ENGINE ==================== */
+        function handleSearch(query) {
+            const clearBtn = document.getElementById('clearSearch');
+            const sugBox = document.getElementById('searchSuggestions');
+            if (!query.trim()) {
+                clearBtn.style.display = 'none';
+                sugBox.style.display = 'none';
+                renderMarketplaceFeed(state.products);
+                return;
+            }
+
+            clearBtn.style.display = 'block';
+            const q = query.toLowerCase();
+
+            const matchedProducts = state.products.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+
+            let html = '';
+            if (matchedProducts.length > 0) {
+                html += `<div style="padding:8px 12px; font-weight:700; font-size:11px; color:#333333; background:#F8F9FA;">ITEMS</div>`;
+                matchedProducts.forEach(p => {
+                    html += `<div style="padding:8px 12px; cursor:pointer; font-size:13px;" onclick="openProductPage('${p.id}')"><i class="fa-solid fa-plane"></i> ${p.title} - R${p.price}</div>`;
+                });
+            }
+
+            sugBox.innerHTML = html || `<div style="padding:12px; font-size:13px; color:#333333;">No aviation equipment found</div>`;
+            sugBox.style.display = 'block';
+
+            renderMarketplaceFeed(matchedProducts);
+        }
+
+        function clearSearchInput() {
+            document.getElementById('searchInput').value = '';
+            handleSearch('');
+        }
+
+        /* ==================== MARKETPLACE FEED ==================== */
+        function renderMarketplaceFeed(productList) {
+            const grid = document.getElementById('productGrid');
+            if (productList.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#000000;">No products found matching your criteria.</div>`;
+                return;
+            }
+
+            grid.innerHTML = productList.map(p => {
+                const isFav = state.favourites.includes(p.id);
+                return `
+                <div class="product-card" onclick="openProductPage('${p.id}')">
+                    <div class="card-img-container">
+                        <img src="${p.images[0]}" alt="${p.title}">
+                        <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavourite(event, '${p.id}')">
+                            <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">${p.title}</div>
+                        <div class="card-price">R${p.price}</div>
+                        <div class="card-meta">
+                            <span>${p.category}</span>
+                            <span style="font-weight:600; color:var(--secondary);">${p.condition}</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function filterByCategory(cat) {
+            document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+            document.getElementById('feedTitle').innerText = cat === 'All' ? 'Discover Aviation Equipment' : `Category: ${cat}`;
+            
+            if (cat === 'All') renderMarketplaceFeed(state.products);
+            else renderMarketplaceFeed(state.products.filter(p => p.category === cat));
+        }
+
+        function handleSort(sortVal) {
+            let sorted = [...state.products];
+            if (sortVal === 'price-low') sorted.sort((a,b) => a.price - b.price);
+            if (sortVal === 'price-high') sorted.sort((a,b) => b.price - a.price);
+            renderMarketplaceFeed(sorted);
+        }
+
+        /* ==================== PRODUCT DETAILS PAGE ==================== */
+        function openProductPage(productId) {
+            const product = state.products.find(p => p.id === productId);
+            if (!product) return;
+            state.activeProduct = product;
+
+            document.getElementById('pTitle').innerText = product.title;
+            document.getElementById('pPrice').innerText = `R${product.price}`;
+            document.getElementById('pCondition').innerText = product.condition;
+            document.getElementById('pDescription').innerText = product.description;
+            document.getElementById('pCategory').innerText = product.category;
+            document.getElementById('pQuantity').innerText = product.quantity;
+
+            // Gallery
+            document.getElementById('galleryMain').innerHTML = `<img src="${product.images[0]}" alt="${product.title}">`;
+            document.getElementById('galleryThumbs').innerHTML = product.images.map((img, idx) => `
+                <div class="thumb ${idx === 0 ? 'active' : ''}" onclick="switchGalleryImg('${img}', this)">
+                    <img src="${img}">
+                </div>
+            `).join('');
+
+            switchView('product');
+        }
+
+        function switchGalleryImg(imgUrl, element) {
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('galleryMain').innerHTML = `<img src="${imgUrl}">`;
+        }
+
+        /* ==================== FAVOURITES ==================== */
+        function toggleFavourite(e, productId) {
+            e.stopPropagation();
+            const idx = state.favourites.indexOf(productId);
+            if (idx > -1) state.favourites.splice(idx, 1);
+            else state.favourites.push(productId);
+            
+            renderMarketplaceFeed(state.products);
+            if (document.getElementById('view-favourites').classList.contains('active')) renderFavourites();
+        }
+
+        function renderFavourites() {
+            const favProducts = state.products.filter(p => state.favourites.includes(p.id));
+            const container = document.getElementById('favouritesGrid');
+            if (favProducts.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#000000;">You have no saved equipment.</div>`;
+                return;
+            }
+            container.innerHTML = favProducts.map(p => `
+                <div class="product-card" onclick="openProductPage('${p.id}')">
+                    <div class="card-img-container">
+                        <img src="${p.images[0]}">
+                        <button class="fav-btn active" onclick="toggleFavourite(event, '${p.id}')"><i class="fa-solid fa-heart"></i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="card-title">${p.title}</div>
+                        <div class="card-price">R${p.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ==================== CHECKOUT SYSTEM ==================== */
+        let checkoutState = { discount: 0 };
+
+        function initiateCheckout() {
+            if (!state.activeProduct) return;
+            checkoutState.discount = 0;
+            document.getElementById('discountRow').style.display = 'none';
+            document.getElementById('promoCodeInput').value = '';
+            recalculateCheckout();
+            switchView('checkout');
+        }
+
+        function recalculateCheckout() {
+            const deliverySelect = document.getElementById('checkoutDelivery');
+            const deliveryCost = parseInt(deliverySelect.options[deliverySelect.selectedIndex].getAttribute('data-cost'));
+            const itemPrice = state.activeProduct.price;
+            const total = (itemPrice + deliveryCost) - checkoutState.discount;
+
+            document.getElementById('summaryItemPrice').innerText = `R${itemPrice}`;
+            document.getElementById('summaryDeliveryFee').innerText = `R${deliveryCost}`;
+            document.getElementById('summaryTotal').innerText = `R${total}`;
+        }
+
+        function applyPromoCode() {
+            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            if (code === 'FLY20') {
+                checkoutState.discount = 20;
+                document.getElementById('summaryDiscount').innerText = `-R20`;
+                document.getElementById('discountRow').style.display = 'flex';
+                recalculateCheckout();
+                alert('Promo code FLY20 applied successfully!');
+            } else {
+                alert('Invalid promo code. Try: FLY20');
+            }
+        }
+
+        function processPayment() {
+            const fullName = document.getElementById('buyerFullName').value.trim();
+            const address = document.getElementById('buyerAddress').value.trim();
+            const phone = document.getElementById('buyerPhone').value.trim();
+            const email = document.getElementById('buyerEmail').value.trim();
+
+            if (!fullName || !address || !phone || !email) {
+                alert('Please fill in all required buyer information fields before confirming.');
+                return;
+            }
+
+            const product = state.activeProduct;
+            const deliveryMethod = document.getElementById('checkoutDelivery').value;
+            const deliveryCost = parseInt(document.getElementById('checkoutDelivery').selectedOptions[0].getAttribute('data-cost'));
+            const total = (product.price + deliveryCost) - checkoutState.discount;
+
+            const newOrder = {
+                id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+                productId: product.id,
+                title: product.title,
+                price: product.price,
+                deliveryFee: deliveryCost,
+                total: total,
+                status: 'PAID',
+                buyerName: fullName,
+                buyerAddress: address,
+                buyerPhone: phone,
+                buyerEmail: email,
+                courier: deliveryMethod,
+                tracking: 'PROCESSING'
+            };
+
+            state.orders.push(newOrder);
+
+            alert(`Order Placed Successfully! Total: R${total}. Your aviation equipment order is being processed.`);
+            switchView('discover');
+        }
+
+        /* ==================== ADD ITEM / LISTING FORM ==================== */
+        function simulatePhotoUpload() {
+            if (state.uploadedPhotoCount < 6) {
+                state.uploadedPhotoCount++;
+                document.getElementById('photoCountLabel').innerText = `${state.uploadedPhotoCount} / 6 uploaded`;
+            } else {
+                alert('Maximum 6 photos allowed.');
+            }
+        }
+
+        function handleCreateListing(e) {
+            e.preventDefault();
+            const imgIndex = String(state.products.length + 1).padStart(2, '0');
+            const newProduct = {
+                id: `p${Date.now()}`,
+                title: document.getElementById('formTitle').value,
+                description: document.getElementById('formDescription').value,
+                category: document.getElementById('formCategory').value,
+                condition: document.getElementById('formCondition').value,
+                quantity: parseInt(document.getElementById('formQuantity').value),
+                price: parseFloat(document.getElementById('formPrice').value),
+                images: [`image${imgIndex}.jpg`]
+            };
+
+            state.products.unshift(newProduct);
+            alert('Aviation listing published successfully!');
+            state.uploadedPhotoCount = 0;
+            document.getElementById('addItemForm').reset();
+            switchView('discover');
+        }
+
+        /* ==================== MESSAGING / CHAT SYSTEM ==================== */
+        function initiateChatFromProduct() {
+            if (!state.activeProduct) return;
+            const existingThread = state.chats.find(c => c.productId === state.activeProduct.id);
+            if (!existingThread) {
+                state.chats.push({
+                    id: `c${Date.now()}`,
+                    peerName: "Seller Support",
+                    productId: state.activeProduct.id,
+                    messages: [{ sender: "me", text: `Hi! Is the item "${state.activeProduct.title}" available?` }]
+                });
+            }
+            switchView('chats');
+        }
+
+        function renderChats() {
+            const listEl = document.getElementById('chatThreadList');
+            listEl.innerHTML = state.chats.map((c, idx) => `
+                <div class="chat-item ${idx === state.activeChatIndex ? 'active' : ''}" onclick="selectChatThread(${idx})">
+                    <div style="font-weight:700; font-size:14px;">${c.peerName}</div>
+                    <div style="font-size:12px; color:#333333; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                        ${c.messages[c.messages.length - 1].text}
+                    </div>
+                </div>
+            `).join('');
+
+            renderChatMessages();
+        }
+
+        function selectChatThread(idx) {
+            state.activeChatIndex = idx;
+            renderChats();
+        }
+
+        function renderChatMessages() {
+            const msgArea = document.getElementById('chatMessagesArea');
+            const activeThread = state.chats[state.activeChatIndex];
+            if (!activeThread) return;
+
+            msgArea.innerHTML = activeThread.messages.map(m => `
+                <div class="chat-bubble ${m.sender}">${m.text}</div>
+            `).join('');
+            msgArea.scrollTop = msgArea.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const activeThread = state.chats[state.activeChatIndex];
+            if (activeThread) {
+                activeThread.messages.push({ sender: 'me', text: text });
+                input.value = '';
+                renderChatMessages();
+            }
+        }
+
+        /* ==================== ADMIN PANEL ==================== */
+        function renderAdmin() {
+            switchAdminTab('users');
+        }
+
+        function switchAdminTab(tab) {
+            const content = document.getElementById('adminContentArea');
+            if (tab === 'users') {
+                content.innerHTML = `
+                    <h3>User Management</h3>
+                    <table class="admin-table" style="margin-top:12px;">
+                        <thead><tr><th>User</th><th>Handle</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <tr><td>Captain Sarah</td><td>@pilot_sarah</td><td>User</td><td><span style="color:green;">Active</span></td><td><button style="padding:4px 8px; font-size:11px; background:#000000; color:#FFFFFF;">Suspend</button></td></tr>
+                            <tr><td>Flight Store</td><td>@flight_store</td><td>Seller</td><td><span style="color:green;">Active</span></td><td><button style="padding:4px 8px; font-size:11px; background:#000000; color:#FFFFFF;">Suspend</button></td></tr>
+                        </tbody>
+                    </table>`;
+            } else if (tab === 'listings') {
+                content.innerHTML = `
+                    <h3>Listing Moderation</h3>
+                    <table class="admin-table" style="margin-top:12px;">
+                        <thead><tr><th>Title</th><th>Price</th><th>Category</th><th>Action</th></tr></thead>
+                        <tbody>
+                            ${state.products.map(p => `<tr><td>${p.title}</td><td>R${p.price}</td><td>${p.category}</td><td><button style="background:var(--danger); color:white; padding:4px 8px; font-size:11px;" onclick="removeProductAdmin('${p.id}')">Remove</button></td></tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } else if (tab === 'orders') {
+                content.innerHTML = `
+                    <h3>Aviation Orders Audit Trail</h3>
+                    <table class="admin-table" style="margin-top:12px;">
+                        <thead><tr><th>Order ID</th><th>Total</th><th>Status</th><th>Delivery Courier</th></tr></thead>
+                        <tbody>
+                            ${state.orders.map(o => `<tr><td>${o.id}</td><td>R${o.total}</td><td>${o.status}</td><td>${o.courier}</td></tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            } else if (tab === 'reports') {
+                content.innerHTML = `
+                    <h3>Flagged Moderation Reports</h3>
+                    <table class="admin-table" style="margin-top:12px;">
+                        <thead><tr><th>Target</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            ${state.reports.map(r => `<tr><td>${r.target}</td><td>${r.reason}</td><td>${r.status}</td><td><button style="padding:4px 8px; font-size:11px; background:#000000; color:#FFFFFF;">Dismiss</button></td></tr>`).join('')}
+                        </tbody>
+                    </table>`;
+            }
+        }
+
+        function removeProductAdmin(productId) {
+            state.products = state.products.filter(p => p.id !== productId);
+            switchAdminTab('listings');
+        }
+
+        /* ==================== INITIALIZATION ==================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMarketplaceFeed(state.products);
+        });
+    </script>
+</body>
+</html>
