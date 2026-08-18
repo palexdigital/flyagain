@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlyAgain - Aviation Marketplace</title>
+    <!-- Web Tab Favicon from Logo Source -->
+    <link rel="icon" type="image/png" href="logo.png">
     <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -53,8 +55,8 @@
         .nav-actions { display: flex; align-items: center; gap: 16px; }
         .nav-btn { background: none; font-size: 14px; font-weight: 600; color: #000000; padding: 8px 12px; display: flex; align-items: center; gap: 6px; }
         .nav-btn:hover { color: var(--primary); }
-        .btn-sell { background: var(--primary); color: var(--white); padding: 8px 18px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .btn-sell:hover { background: var(--primary-dark); color: var(--white); }
+        .btn-sell { background: var(--success); color: var(--white); padding: 8px 18px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .btn-sell:hover { background: var(--success-dark); color: var(--white); }
 
         .category-bar { display: flex; gap: 20px; overflow-x: auto; padding: 10px 24px; max-width: 1400px; margin: 0 auto; border-top: 1px solid rgba(0, 0, 0, 0.15); font-size: 13px; font-weight: 500; white-space: nowrap; scrollbar-width: none; color: #000000; background: #FFFFFF; }
         .category-bar::-webkit-scrollbar { display: none; }
@@ -79,9 +81,11 @@
             border-left: 5px solid var(--secondary); 
             box-shadow: var(--shadow); 
         }
-        .hero-text h1 { font-size: 32px; color: var(--white); margin-bottom: 8px; }
-        .hero-text p { color: #FFFFFF; max-width: 600px; font-size: 15px; line-height: 1.5; }
+        .hero-text h1 { font-size: 32px; color: #000000; margin-bottom: 8px; }
+        .hero-text p { color: #000000; max-width: 600px; font-size: 15px; line-height: 1.5; }
         .hero-logo { height: 60px; width: auto; object-fit: contain; margin: 0 20px; }
+        .btn-how-it-works { background: var(--success); color: #000000; font-weight: 600; border-radius: 20px; border: none; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+        .btn-how-it-works:hover { background: var(--success-dark); }
 
         /* PRODUCT GRID & CARDS */
         .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #000000; }
@@ -173,6 +177,44 @@
         .status-PAID { background: #E3F2FD; color: #1976D2; }
         .status-SHIPPED { background: #FFF3E0; color: #F57C00; }
         .status-COMPLETED { background: #E8F5E9; color: #388E3C; }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 768px) {
+            .top-nav {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                padding: 12px 16px;
+            }
+            .logo-container {
+                grid-column: 1;
+                align-items: flex-start;
+            }
+            .nav-actions {
+                grid-column: 2;
+                justify-content: flex-end;
+            }
+            .nav-actions .btn-sell {
+                display: none; /* Hidden from header on mobile, displayed at bottom middle */
+            }
+            .search-container {
+                grid-column: 1 / -1;
+                max-width: 100%;
+                width: 100%;
+            }
+            .mobile-bottom-sell {
+                display: flex !important;
+                position: fixed;
+                bottom: 16px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1001;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            }
+        }
+        .mobile-bottom-sell {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -222,8 +264,7 @@
                     <h1>Pre-loved & New Aviation Gear</h1>
                     <p>Buy and sell aviation equipment safely with FlyAgain. Find the gear, tools and resources you need for your aviation journey.</p>
                 </div>
-                <img src="logo.png" alt="FlyAgain Logo" class="hero-logo" onerror="this.onerror=null; this.src='logo.png';">
-                <button class="btn-sell" style="padding: 12px 24px;" onclick="switchView('how-it-works')">How It Works →</button>
+                <button class="btn-how-it-works" style="padding: 12px 24px;" onclick="switchView('how-it-works')">How It Works →</button>
             </div>
 
             <!-- Main Marketplace Feed -->
@@ -276,6 +317,7 @@
 
         <!-- VIEW 3: CHECKOUT -->
         <section id="view-checkout" class="page-view">
+            <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div class="checkout-box">
                 <h2 style="margin-bottom: 20px;">Checkout</h2>
 
@@ -339,6 +381,7 @@
 
         <!-- VIEW 4: ADD / EDIT LISTING -->
         <section id="view-add-item" class="page-view">
+            <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div class="form-container">
                 <h2>Create New Aviation Listing</h2>
                 <p style="color:#333333; font-size:13px; margin-bottom:20px;">Add up to 6 high-quality photos to make your item stand out.</p>
@@ -402,6 +445,7 @@
 
         <!-- VIEW 5: SAVED / FAVOURITES -->
         <section id="view-favourites" class="page-view">
+            <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <h2 style="color:#000000;">My Saved Gear</h2>
             <p style="color:#333333; opacity: 0.9; font-size:14px; margin-bottom:20px;">Saved items stay in your profile across sessions.</p>
             <div class="product-grid" id="favouritesGrid">
@@ -446,6 +490,7 @@
 
         <!-- VIEW 8: HOW IT WORKS / FAQ -->
         <section id="view-how-it-works" class="page-view">
+            <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div style="background:white; padding:30px; border-radius:var(--radius); border:1px solid var(--border); color:#000000;">
                 <h2>Safe Aviation Marketplace Transactions</h2>
                 <hr style="margin: 16px 0; border:none; border-top:1px solid var(--border);">
@@ -460,6 +505,9 @@
 
     </main>
 
+    <!-- MOBILE BOTTOM SELL BUTTON -->
+    <button class="btn-sell mobile-bottom-sell" onclick="switchView('add-item')"><i class="fa-solid fa-plus"></i> Sell Now</button>
+
     <!-- FOOTER -->
     <footer>
         <div class="footer-grid">
@@ -473,8 +521,6 @@
             <div class="footer-col">
                 <h4>Buying & Selling</h4>
                 <ul>
-                    <li><a href="#">Buyer Protection</a></li>
-                    <li><a href="#">Seller Protection</a></li>
                     <li><a href="#">Delivery Info</a></li>
                 </ul>
             </div>
@@ -482,7 +528,6 @@
                 <h4>Support</h4>
                 <ul>
                     <li><a href="#" onclick="switchView('how-it-works')">Help Centre</a></li>
-                    <li><a href="#">Safety & Security</a></li>
                     <li><a href="#">Terms & Conditions</a></li>
                 </ul>
             </div>
@@ -505,7 +550,7 @@
                 { id: "p4", title: "Randolph Engineering Aviator Sunglasses 55mm", price: 3200, category: "Glasses", condition: "New", quantity: 2, images: ["image04.jpg"], description: "Matte chrome frame, AGX non-polarized lenses preferred by pilots." },
                 { id: "p5", title: "PPL Training Manual Set (SACAA Approved)", price: 1800, category: "Books", condition: "Used", quantity: 1, images: ["image05.jpg"], description: "Full set covering Navigation, Meteorology, Air Law, and Flight Planning." }
             ],
-            favourites: ["p1"],
+            favourites: [],
             orders: [
                 { id: "ORD-9921", productId: "p3", title: "Logitech G Saitek Pro Flight Yoke", price: 4500, deliveryFee: 75, total: 4575, status: "SHIPPED", courier: "Courier Guy Lockers", tracking: "CG-882391" }
             ],
@@ -611,9 +656,21 @@
             }).join('');
         }
 
-        function filterByCategory(cat) {
+        function filterByCategory(cat, evt) {
+            if (document.querySelector('.page-view.active')?.id !== 'view-discover') {
+                switchView('discover');
+            }
             document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
-            if (event && event.target) event.target.classList.add('active');
+            
+            const eventObj = evt || window.event;
+            if (eventObj && eventObj.target) {
+                eventObj.target.classList.add('active');
+            } else {
+                const catElements = Array.from(document.querySelectorAll('.cat-item'));
+                const targetEl = catElements.find(el => el.textContent.trim() === cat || (cat === 'All' && el.textContent.trim() === 'All Categories'));
+                if (targetEl) targetEl.classList.add('active');
+            }
+            
             document.getElementById('feedTitle').innerText = cat === 'All' ? 'Discover Aviation Equipment' : `Category: ${cat}`;
             
             if (cat === 'All') renderMarketplaceFeed(state.products);
