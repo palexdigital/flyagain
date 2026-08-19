@@ -55,8 +55,8 @@
         .nav-actions { display: flex; align-items: center; gap: 16px; }
         .nav-btn { background: none; font-size: 14px; font-weight: 600; color: #000000; padding: 8px 12px; display: flex; align-items: center; gap: 6px; }
         .nav-btn:hover { color: var(--primary); }
-        .btn-sell { background: var(--success); color: var(--white); padding: 8px 18px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .btn-sell:hover { background: var(--success-dark); color: var(--white); }
+        .btn-sell { background: #000000; color: var(--white); padding: 8px 18px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .btn-sell:hover { background: #222222; color: var(--white); }
 
         .category-bar { display: flex; gap: 20px; overflow-x: auto; padding: 10px 24px; max-width: 1400px; margin: 0 auto; border-top: 1px solid rgba(0, 0, 0, 0.15); font-size: 13px; font-weight: 500; white-space: nowrap; scrollbar-width: none; color: #000000; background: #FFFFFF; }
         .category-bar::-webkit-scrollbar { display: none; }
@@ -80,12 +80,13 @@
             align-items: center; 
             border-left: 5px solid var(--secondary); 
             box-shadow: var(--shadow); 
+            min-height: 100vh;
         }
-        .hero-text h1 { font-size: 32px; color: #000000; margin-bottom: 8px; }
-        .hero-text p { color: #000000; max-width: 600px; font-size: 15px; line-height: 1.5; }
+        .hero-text h1 { font-size: 32px; color: #FFFFFF; margin-bottom: 8px; }
+        .hero-text p { color: #FFFFFF; max-width: 600px; font-size: 15px; line-height: 1.5; }
         .hero-logo { height: 60px; width: auto; object-fit: contain; margin: 0 20px; }
-        .btn-how-it-works { background: var(--success); color: #000000; font-weight: 600; border-radius: 20px; border: none; font-size: 14px; cursor: pointer; transition: background 0.2s; }
-        .btn-how-it-works:hover { background: var(--success-dark); }
+        .btn-how-it-works { background: #DC3545; color: #FFFFFF; font-weight: 600; border-radius: 20px; border: none; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+        .btn-how-it-works:hover { background: #B51202; }
 
         /* PRODUCT GRID & CARDS */
         .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; color: #000000; }
@@ -181,26 +182,30 @@
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
             .top-nav {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
                 gap: 12px;
                 padding: 12px 16px;
             }
             .logo-container {
-                grid-column: 1;
                 align-items: flex-start;
             }
+            .search-container {
+                flex: 1;
+                max-width: 100%;
+                width: 100%;
+            }
             .nav-actions {
-                grid-column: 2;
                 justify-content: flex-end;
+            }
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
             }
             .nav-actions .btn-sell {
                 display: none; /* Hidden from header on mobile, displayed at bottom middle */
-            }
-            .search-container {
-                grid-column: 1 / -1;
-                max-width: 100%;
-                width: 100%;
             }
             .mobile-bottom-sell {
                 display: flex !important;
@@ -492,14 +497,56 @@
         <section id="view-how-it-works" class="page-view">
             <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div style="background:white; padding:30px; border-radius:var(--radius); border:1px solid var(--border); color:#000000;">
-                <h2>Safe Aviation Marketplace Transactions</h2>
-                <hr style="margin: 16px 0; border:none; border-top:1px solid var(--border);">
-                <h3>How FlyAgain Works:</h3>
-                <ol style="margin-left: 20px; line-height: 2; margin-top: 10px;">
-                    <li><strong>Find Equipment:</strong> Browse headsets, drones, simulators, pilot glasses, and training material.</li>
-                    <li><strong>Place Order:</strong> Provide your delivery contact details and choose Courier Guy Lockers or PAXI Parcel.</li>
-                    <li><strong>Secure Delivery:</strong> Sellers ship the equipment directly to your designated locker or pickup node.</li>
-                </ol>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h3>How to Buy</h3>
+                        <ol style="margin-left: 20px; line-height: 1.8; margin-top: 10px;">
+                            <li><strong>Find Equipment:</strong> Browse headsets, drones, simulators, pilot glasses, and training material.</li>
+                            <li><strong>Place Order:</strong> Provide your delivery contact details and choose Courier Guy Lockers or PAXI Parcel.</li>
+                            <li><strong>Secure Delivery:</strong> Sellers ship the equipment directly to your designated locker or pickup node.</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3>How to Sell</h3>
+                        <ol style="margin-left: 20px; line-height: 1.8; margin-top: 10px;">
+                            <li><strong>List Your Item:</strong> Upload photos, write a detailed description, set a price, and specify gear condition.</li>
+                            <li><strong>Receive Orders:</strong> Get notified when a buyer purchases your equipment and chooses delivery options.</li>
+                            <li><strong>Ship Gear:</strong> Drop off the package at the selected locker or courier point for secure delivery.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 9: ABOUT US -->
+        <section id="view-about" class="page-view">
+            <button class="back-nav-btn" onclick="navigateBack()"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <div style="background:white; padding:30px; border-radius:var(--radius); border:1px solid var(--border); color:#000000; max-width:900px; margin:0 auto;">
+                <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 12px; color: #000000;">About</h2>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--primary);">Started in a hangar, not a boardroom</h3>
+                <p style="font-size: 15px; line-height: 1.6; margin-bottom: 16px; color: #333333;">
+                    We're pilots from Wonderboom National Airport who spent our student years borrowing textbooks and breaking the bank on headsets. Every rand that went into gear was a rand that didn't go into the logbook.
+                </p>
+                <p style="font-size: 15px; line-height: 1.6; margin-bottom: 16px; color: #333333;">
+                    FlyAgain started when we sold a spare Bose headset to a PPL student for half of retail and realised how many aviators were sitting on gear they no longer used — while the next generation of pilots couldn't afford to get started.
+                </p>
+                <p style="font-size: 15px; line-height: 1.6; margin-bottom: 24px; color: #333333;">
+                    Today we buy, inspect, clean and resell pre-owned aviation equipment. Every headset is bench tested on both channels, every book checked against the current syllabus, every camera and tablet battery-health verified before it's listed.
+                </p>
+                <p style="font-size: 16px; font-weight: 700; margin-bottom: 32px; color: #000000;">
+                    Quality checked. Pilot approved. FlyAgain.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid var(--border); margin: 32px 0;">
+
+                <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 12px; color: #000000;">Our Mission</h2>
+                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--secondary);">Flying is expensive. Gear shouldn't be.</h3>
+                <p style="font-size: 15px; line-height: 1.6; margin-bottom: 24px; color: #333333;">
+                    At FlyAgain, our goal is to make aviation more affordable and accessible. We give pre-owned aviation appliances a second life so new and experienced aviators can focus on flying, not on breaking the bank.
+                </p>
+                <p style="font-size: 16px; font-weight: 700; color: #000000;">
+                    Quality checked. Pilot approved. FlyAgain.
+                </p>
             </div>
         </section>
 
@@ -515,7 +562,7 @@
                 <h4>About FlyAgain</h4>
                 <ul>
                     <li><a href="#" onclick="switchView('how-it-works')">How It Works</a></li>
-                    <li><a href="#">About Us</a></li>
+                    <li><a href="#" onclick="switchView('about')">About Us</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -544,13 +591,13 @@
             currentUser: { id: "u1", name: "Captain Sarah", handle: "@pilot_sarah" },
             previousView: 'discover',
 
-    products: [
+            products: [
                 { id: "p1", title: "rhjhrhhokjhoihuirh", price: 18565965900, category: "Headsets", condition: "Used", quantity: 1, images: ["image01.jpg", "image02.jpg"], description: "lrp8k575woo7p79;o;" },
                 { id: "p2", title: "ryjyeyiuui", price: 429888000, category: "Drones", condition: "New", quantity: 1, images: ["image02.jpg"], description: "9p;0l799;0'-le6p;rp;7;8ll8r6l,8" },
                 { id: "p3", title: "yj7jje", price: 4599700, category: "Simulators", condition: "Used", quantity: 1, images: ["image03.jpg"], description: "8lyol68mk66o" },
                 { id: "p4", title: "121233", price: 3687200, category: "Glasses", condition: "New", quantity: 2, images: ["image04.jpg"], description: "yuppp98oyu6r" },
                 { id: "p5", title: "12344)", price: 34467, category: "Books", condition: "Used", quantity: 1, images: ["image05.jpg"], description: "7i9i57ikl78o8ro" }
-              ],
+            ],
             favourites: [],
             orders: [
                 { id: "ORD-9921", productId: "p3", title: "Logitech G Saitek Pro Flight Yoke", price: 4500, deliveryFee: 75, total: 4575, status: "SHIPPED", courier: "Courier Guy Lockers", tracking: "CG-882391" }
